@@ -25,6 +25,15 @@ For more information, please refer to the [documentation].
 
 Stay tuned, more features are planned!
 
+## Mutli Architecture Docker Image Build
+
+1. Run `git clone https://github.com/loic-sharma/BaGet.git`
+2. Navigate to project folder
+3. Run `docker run --rm --privileged multiarch/qemu-user-static --reset -p yes`
+4. Run `docker buildx create --name multiarch --driver docker-container --use`
+5. Run `docker buildx inspect --bootstrap`
+6. Run `docker buildx build --progress plain --platform linux/amd64,linux/arm64 -t registry/repo:tag --push .`
+
 [Build status]: https://img.shields.io/github/actions/workflow/status/loic-sharma/BaGet/.github/workflows/main.yml
 [Discord image]: https://img.shields.io/discord/889377258068930591
 [Discord link]: https://discord.gg/MWbhpf66mk
