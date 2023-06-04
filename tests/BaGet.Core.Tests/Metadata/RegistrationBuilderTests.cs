@@ -60,7 +60,7 @@ namespace BaGet.Core.Tests.Metadata
                 PackageTypes = new List<PackageType> { new() { Name = "test" } },
                 Dependencies = new List<PackageDependency>(),
                 Version = new NuGetVersion(version),
-                Published = new DateTime(2003, 1, 4, 15, 9, 26, 535)
+                Published = DateTimeOffset.MinValue.UtcDateTime
             };
         }
     }
