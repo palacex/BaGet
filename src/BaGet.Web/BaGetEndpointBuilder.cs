@@ -17,6 +17,7 @@ namespace BaGet
             MapSearchRoutes(endpoints);
             MapPackageMetadataRoutes(endpoints);
             MapPackageContentRoutes(endpoints);
+            MapPackageVersionRoutes(endpoints);
         }
 
         public void MapServiceIndexRoutes(IEndpointRouteBuilder endpoints)
@@ -25,6 +26,14 @@ namespace BaGet
                 name: Routes.IndexRouteName,
                 pattern: "v3/index.json",
                 defaults: new { controller = "ServiceIndex", action = "Get" });
+        }
+
+        public void MapPackageVersionRoutes(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapControllerRoute(
+                name: Routes.PackageVersionsRouteName,
+                pattern: "v3-flatcontainer/{packageId}/index.json",
+                defaults: new { controller = "VersionsController", action = "GetVersionsForPackage" });
         }
 
         public void MapPackagePublishRoutes(IEndpointRouteBuilder endpoints)

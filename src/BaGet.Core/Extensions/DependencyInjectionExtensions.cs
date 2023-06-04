@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using BaGet.Core.Configuration;
+using BaGet.Protocol;
 
 namespace BaGet.Core
 {
@@ -67,6 +69,7 @@ namespace BaGet.Core
             services.AddBaGetOptions<MirrorOptions>(nameof(BaGetOptions.Mirror));
             services.AddBaGetOptions<SearchOptions>(nameof(BaGetOptions.Search));
             services.AddBaGetOptions<StorageOptions>(nameof(BaGetOptions.Storage));
+            services.AddBaGetOptions<ProxyOptions>(nameof(BaGetOptions.Proxy));
         }
 
         private static void AddBaGetServices(this IServiceCollection services)
@@ -174,10 +177,19 @@ namespace BaGet.Core
             var assemblyName = assembly.GetName().Name;
             var assemblyVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
 
-            var client = new HttpClient(new HttpClientHandler
+            var httpClientHandler = new HttpClientHandler
             {
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-            });
+            };
+
+            var proxyOptions = provider.GetRequiredService<IOptions<ProxyOptions>>();
+
+            if (!string.IsNullOrEmpty(proxyOptions.Value.Address))
+            {
+                httpClientHandler.Proxy = new WebProxy(proxyOptions.Value.Address);
+            }
+
+            var client = new HttpClient(httpClientHandler);
 
             client.DefaultRequestHeaders.Add("User-Agent", $"{assemblyName}/{assemblyVersion}");
             client.Timeout = TimeSpan.FromSeconds(options.PackageDownloadTimeoutSeconds);
