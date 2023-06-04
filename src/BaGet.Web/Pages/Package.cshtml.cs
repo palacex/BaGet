@@ -90,7 +90,7 @@ namespace BaGet.Web
                 return;
             }
 
-            ApiKey = _options.Value.ApiKey;
+            ApiKey = _options.Value == null ? string.Empty : _options.Value.ApiKey;
 
             var packageVersion = Package.Version;
 
